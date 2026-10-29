@@ -71,7 +71,12 @@
   .signal-code{display:block;width:100%;min-height:58px;max-height:110px;resize:vertical;margin-top:5px;border:1px solid rgba(131,177,247,.25);border-radius:8px;background:rgba(2,7,23,.78);color:#dbeaff;padding:9px;font:10px/1.45 ui-monospace,monospace;overflow-wrap:anywhere}
   .peer-status{padding:9px 10px;margin-top:10px;border-radius:8px;background:rgba(4,11,29,.68);color:#8cefc8;font-size:10px;line-height:1.5;min-height:34px}
   .peer-status.error{color:#ffb1a8}
-  .online-start{width:100%;margin-top:9px}
+  .signal-code{display:block;width:100%;min-height:58px;max-height:110px;resize:vertical;margin-top:5px;border:1px solid rgba(131,177,247,.25);border-radius:8px;background:rgba(2,7,23,.78);color:#dbeaff;padding:9px;font:10px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace}
+  .friend-code-input{height:44px;min-height:44px;max-height:44px;resize:none;font-size:19px;letter-spacing:.22em;text-align:center;text-transform:uppercase;font-weight:900}
+  .pending-challenge{margin-top:12px;padding:12px;border:1px solid rgba(83,225,255,.38);border-radius:10px;background:rgba(40,122,164,.13)}
+  .pending-challenge strong{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:#a7f6ff}
+  .incoming-challenge-text{margin-top:6px;color:#b6c9e8;font-size:11px;line-height:1.45}
+  .online-buttons button:disabled{opacity:.45;cursor:not-allowed;filter:none;transform:none}
   .controls-panel{display:none;margin-top:17px;border:1px solid rgba(129,183,255,.2);border-radius:12px;padding:15px;background:rgba(4,10,30,.76)}
   .controls-panel.open{display:block}
   .controls-panel h4{margin:0 0 11px;font-size:11px;letter-spacing:.16em;text-transform:uppercase}
@@ -127,23 +132,17 @@
           <button class="mode-btn" id="modeOnline"><span>↗</span> ONLINE P2P</button>
         </div>
         <div id="onlinePanel" class="online-panel">
-          <div class="online-title"><h4>Direct peer-to-peer challenge</h4><span class="peer-id" id="localPeerIdValue">SKY-----</span></div>
-          <p class="online-copy">No game server, account, or matchmaking service. Create an invite, send the code to your friend in a message, and have them accept it. Your friend sends their reply code back. Gameplay then travels directly between browsers. Both laptops use the same controls: A/D move, W jump, S block, F strike, G skill, H ultimate. A public STUN service helps connect players behind routers; restrictive networks may still block direct P2P.</p>
-          <div class="online-buttons"><button type="button" id="createInviteBtn" class="primary-btn">Create challenge</button><button type="button" id="resetPeerBtn" class="secondary-btn">Reset connection</button></div>
-          <label class="code-label" for="inviteCodeOutput">Your invite code · send this to your friend</label>
-          <textarea id="inviteCodeOutput" class="signal-code" spellcheck="false" readonly placeholder="Click Create challenge to generate an invite code."></textarea>
-          <div class="online-buttons"><button type="button" id="copyInviteBtn" class="secondary-btn">Copy invite code</button></div>
-          <label class="code-label" for="inviteCodeInput">Friend's invite code · paste it here to accept</label>
-          <textarea id="inviteCodeInput" class="signal-code" spellcheck="false" placeholder="Paste the invite code your friend sent you."></textarea>
-          <div class="online-buttons"><button type="button" id="acceptInviteBtn" class="primary-btn">Accept challenge</button></div>
-          <label class="code-label" for="replyCodeOutput">Your reply code · send this back to the host</label>
-          <textarea id="replyCodeOutput" class="signal-code" spellcheck="false" readonly placeholder="Accept a challenge first to generate a reply code."></textarea>
-          <div class="online-buttons"><button type="button" id="copyReplyBtn" class="secondary-btn">Copy reply code</button></div>
-          <label class="code-label" for="replyCodeInput">Friend's reply code · host pastes it here</label>
-          <textarea id="replyCodeInput" class="signal-code" spellcheck="false" placeholder="The host pastes the reply code here to finish connecting."></textarea>
-          <div class="online-buttons"><button type="button" id="connectReplyBtn" class="primary-btn">Connect to friend</button></div>
-          <div id="peerStatus" class="peer-status" role="status" aria-live="polite">Create an invite on one laptop, or paste a friend's invite code here.</div>
-          <button type="button" id="onlineStartBtn" class="primary-btn online-start" disabled>Start online fight</button>
+          <div class="online-title"><h4>Your friend code</h4><span class="peer-id" id="localPeerIdValue">------</span></div>
+          <p class="online-copy">Open Online P2P on both laptops. Send your friend this short code. They enter it and click Request a Fight; when the request appears here, click Accept & Start Match. No long offer/reply codes. Match data travels directly between browsers; a small public signaling service is used only to find each other.</p>
+          <div class="online-buttons"><button type="button" id="copyMyIdBtn" class="secondary-btn">Copy my code</button><button type="button" id="cancelOnlineBtn" class="secondary-btn">Cancel / disconnect</button></div>
+          <label class="code-label" for="friendCodeInput">Friend's 6-character code</label>
+          <input id="friendCodeInput" class="signal-code friend-code-input" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="e.g. A7K3PQ" />
+          <div class="online-buttons"><button type="button" id="requestChallengeBtn" class="primary-btn">Request a fight</button></div>
+          <div id="incomingChallenge" class="pending-challenge hidden">
+            <div><strong>Incoming challenge</strong><div id="incomingChallengeText" class="incoming-challenge-text">A friend wants to fight.</div></div>
+            <div class="online-buttons"><button type="button" id="acceptChallengeBtn" class="primary-btn" disabled>Accept &amp; Start Match</button><button type="button" id="declineChallengeBtn" class="secondary-btn">Decline</button></div>
+          </div>
+          <div id="peerStatus" class="peer-status" role="status" aria-live="polite">Choose Online P2P to connect and show your code.</div>
         </div>
         <div class="select-heading"><strong id="p1Heading">Player 1 · Challenger</strong><small>WASD + F / G / H</small></div>
         <div id="p1Cards" class="character-grid" aria-label="Choose player 1 character"></div>
@@ -176,6 +175,7 @@
   </section>
   <div class="footer"><span>ELEMENTAL BRAWL · SKY ARENA</span><span>Sprites from your provided PNG sheets</span></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js" crossorigin="anonymous"></script>
 <script>
 (() => {
   'use strict';
@@ -237,17 +237,26 @@
   let damageTexts = [];
   const down = new Set();
   const justPressed = new Set();
-  let onlineRole = ''; // 'host' or 'guest'; host is the authoritative simulation peer
-  let peerConnection = null, peerChannel = null, peerConnected = false;
+  let onlineRole = ''; // 'host' or 'guest'; host owns the authoritative simulation
+  let peerClient = null, peerChannel = null, peerConnected = false, peerReady = false, peerInitPromise = null;
+  let pendingChallengeConn = null, pendingChallengeFighter = '';
   let remotePeerId = '', remoteHeld = {left:false,right:false,block:false,light:false};
   const remoteEdges = new Set();
   let peerChar = 'aqua', stateSendClock = 0, inputSendClock = 0, matchWinner = 0;
-  const localPeerId = getOrMakePeerId();
-  function getOrMakePeerId(){
-    const key='elementalBrawlPeerIdV1';
-    try { let id=localStorage.getItem(key); if(id) return id; id='SKY-'+Array.from(crypto.getRandomValues(new Uint8Array(6))).map(n=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[n%32]).join(''); localStorage.setItem(key,id); return id; }
-    catch { return 'SKY-'+Math.random().toString(36).slice(2,7).toUpperCase(); }
+  let localPeerId = getOrMakePeerId();
+  const FRIEND_CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  function generatePeerId(){
+    let out='';
+    try { const bytes=crypto.getRandomValues(new Uint8Array(6)); for(const b of bytes)out+=FRIEND_CODE_CHARS[b%FRIEND_CODE_CHARS.length]; }
+    catch { for(let i=0;i<6;i++)out+=FRIEND_CODE_CHARS[Math.floor(Math.random()*FRIEND_CODE_CHARS.length)]; }
+    return out;
   }
+  function getOrMakePeerId(){
+    const key='elementalBrawlShortFriendCodeV2';
+    try { const old=localStorage.getItem(key); if(old && /^[A-Z2-9]{6}$/.test(old))return old; const id=generatePeerId();localStorage.setItem(key,id);return id; }
+    catch { return generatePeerId(); }
+  }
+  function savePeerId(id){localPeerId=id;try{localStorage.setItem('elementalBrawlShortFriendCodeV2',id);}catch{}}
 
   const $ = id => document.getElementById(id);
   const menuScreen=$('menuScreen'), gameScreen=$('gameScreen'), assetStatus=$('assetStatus');
@@ -277,110 +286,169 @@
     $('modeOnline').setAttribute('aria-pressed',mode==='online');
     $('startBtn').disabled=mode==='online';
     $('startBtn').textContent=mode==='online'?'Use the challenge panel ↗':'Enter the Arena ↗';
-    $('opponentNote').textContent=mode==='online'?'Choose your fighter above on each laptop. The host creates an invite; the guest accepts it, then returns a reply code. After connecting, the host starts the match.': 'Both sides can choose the same character. In VS COMPUTER mode, the opponent uses the selected character and fights back automatically.';
+    $('opponentNote').textContent=mode==='online'?'Choose your fighter above, share your short code, request a fight, and accept the incoming challenge to start immediately.': 'Both sides can choose the same character. In VS COMPUTER mode, the opponent uses the selected character and fights back automatically.';
   }
   $('modeAI').addEventListener('click',()=>{mode='ai';renderCards();});
   $('modeLocal').addEventListener('click',()=>{mode='local';renderCards();});
-  $('modeOnline').addEventListener('click',()=>{mode='online';renderCards();});
+  $('modeOnline').addEventListener('click',()=>{mode='online';renderCards();ensurePeerReady().catch(()=>{});});
   $('localPeerIdValue').textContent=localPeerId;
   const peerStatus=$('peerStatus');
   function setPeerStatus(message,error=false){peerStatus.textContent=message;peerStatus.classList.toggle('error',!!error);}
-  function b64Url(bytes){let raw='';for(let i=0;i<bytes.length;i+=0x8000)raw+=String.fromCharCode(...bytes.subarray(i,Math.min(i+0x8000,bytes.length)));return btoa(raw).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
-  function fromB64Url(text){const clean=text.replace(/-/g,'+').replace(/_/g,'/');const padded=clean+'='.repeat((4-clean.length%4)%4);const raw=atob(padded);const out=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)out[i]=raw.charCodeAt(i);return out;}
-  async function encodeSignal(obj){
-    const raw=new TextEncoder().encode(JSON.stringify(obj));
-    if('CompressionStream' in window){const stream=new Blob([raw]).stream().pipeThrough(new CompressionStream('gzip'));const zip=new Uint8Array(await new Response(stream).arrayBuffer());return 'EB1G:'+b64Url(zip);}
-    return 'EB1:'+b64Url(raw);
-  }
-  async function decodeSignal(code){
-    const text=String(code||'').trim();const cut=text.indexOf(':');if(cut<0)throw new Error('That code is not valid. Copy the complete connection code, including its EB1 prefix.');
-    const kind=text.slice(0,cut),bytes=fromB64Url(text.slice(cut+1));let raw=bytes;
-    if(kind==='EB1G'){if(!('DecompressionStream' in window))throw new Error('This browser cannot unpack a compressed invite. Use an up-to-date Chrome, Edge, Firefox, or Safari.');const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));raw=new Uint8Array(await new Response(stream).arrayBuffer());}
-    else if(kind!=='EB1')throw new Error('Unknown invite-code version. Copy the entire code again.');
-    return JSON.parse(new TextDecoder().decode(raw));
-  }
-  function waitForIce(pc,timeout=14000){
-    if(pc.iceGatheringState==='complete')return Promise.resolve();
-    return new Promise(resolve=>{let done=false;const finish=()=>{if(done)return;done=true;clearTimeout(timer);pc.removeEventListener('icegatheringstatechange',check);resolve();};const check=()=>{if(pc.iceGatheringState==='complete')finish();};const timer=setTimeout(finish,timeout);pc.addEventListener('icegatheringstatechange',check);});
-  }
-  function resetPeerConnection(clearCodes=true){
+  function setLocalCodeDisplay(){ $('localPeerIdValue').textContent=localPeerId; }
+  function normalizeFriendCode(value){return String(value||'').toUpperCase().replace(/[^A-Z0-9]/g,'').trim();}
+  function parsePeerMessage(data){try{return typeof data==='string'?JSON.parse(data):data;}catch{return null;}}
+  function sendOn(conn,message){if(conn && conn.open){try{conn.send(JSON.stringify(message));return true;}catch(e){setPeerStatus('Message failed: '+e.message,true);}}return false;}
+  function resetActivePeerConnection(clearStatus=true){
     peerConnected=false;remoteHeld={left:false,right:false,block:false,light:false};remoteEdges.clear();
-    try{if(peerChannel){peerChannel.onopen=peerChannel.onclose=peerChannel.onerror=peerChannel.onmessage=null;peerChannel.close();}}catch{}
-    try{if(peerConnection){peerConnection.ondatachannel=peerConnection.onconnectionstatechange=null;peerConnection.close();}}catch{}
-    peerChannel=null;peerConnection=null;onlineRole='';remotePeerId='';$('onlineStartBtn').disabled=true;
-    if(clearCodes){$('inviteCodeOutput').value='';$('replyCodeOutput').value='';$('inviteCodeInput').value='';$('replyCodeInput').value='';}
+    const connections=new Set([peerChannel,pendingChallengeConn]);
+    for(const c of connections){try{if(c)c.close();}catch{}}
+    peerChannel=null;pendingChallengeConn=null;pendingChallengeFighter='';remotePeerId='';onlineRole='';
+    $('incomingChallenge').classList.add('hidden');$('acceptChallengeBtn').disabled=true;
+    if(clearStatus)setPeerStatus(peerReady?'Online and listening for challenges. Share your 6-character code.':'Not connected yet.');
   }
-  function makePeerConnection(){
-    if(!('RTCPeerConnection' in window))throw new Error('WebRTC is not available in this browser. Please use a recent desktop browser.');
-    // No game server is used. STUN is only used to discover network routes; no TURN relay is configured.
-    const pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});
-    pc.onconnectionstatechange=()=>{
-      if(pc.connectionState==='failed')setPeerStatus('Direct connection failed. This can happen with strict NAT/firewalls because no relay server is used. Try both laptops on the same Wi-Fi, or retry with another network.',true);
-      else if(pc.connectionState==='disconnected')setPeerStatus('Peer disconnected. Checking connection…',true);
-      else if(pc.connectionState==='connecting')setPeerStatus('Negotiating direct peer-to-peer connection…');
-    };
-    return pc;
+  function saveAndShowNewPeerId(){
+    const id=generatePeerId();savePeerId(id);setLocalCodeDisplay();return id;
   }
-  function attachPeerChannel(channel){
-    peerChannel=channel;channel.onopen=()=>{
-      peerConnected=true;
-      if(onlineRole==='host'){
-        setPeerStatus('Connected directly to '+(remotePeerId||'your friend')+'. You are the host; choose your fighter above and start the match.');
-        $('onlineStartBtn').disabled=false;
-      }else{
-        setPeerStatus('Connected directly to '+(remotePeerId||'the host')+'. Your fighter is selected above. Waiting for the host to start.');
-        $('onlineStartBtn').disabled=true;
+  function ensurePeerReady(){
+    if(typeof window.Peer!=='function'){
+      const error=new Error('PeerJS could not load. Check your internet connection, refresh the page, and try again.');setPeerStatus(error.message,true);return Promise.reject(error);
+    }
+    if(peerClient && peerReady && !peerClient.destroyed)return Promise.resolve(peerClient);
+    if(peerInitPromise)return peerInitPromise;
+    peerInitPromise=new Promise((resolve,reject)=>{
+      let attempts=0, settled=false;
+      const makePeer=()=>{
+        setPeerStatus('Connecting to the challenge service…');
+        let peer;
+        try {peer=new window.Peer(localPeerId,{host:'0.peerjs.com',port:443,path:'/',secure:true,debug:0});}
+        catch(e){if(!settled){settled=true;reject(e);}setPeerStatus('Could not start online mode: '+e.message,true);return;}
+        peerClient=peer;peerReady=false;
+        peer.on('open',id=>{
+          if(peer!==peerClient)return;
+          savePeerId(id);peerReady=true;setLocalCodeDisplay();
+          setPeerStatus('Online and listening. Share your 6-character code with your friend. Keep this page open.');
+          if(!settled){settled=true;resolve(peer);}
+        });
+        peer.on('connection',conn=>handleIncomingConnection(conn));
+        peer.on('disconnected',()=>{
+          if(peer!==peerClient)return;peerReady=false;
+          setPeerStatus('Temporarily disconnected from the challenge service. Reconnecting…',true);
+          try{if(!peer.destroyed)peer.reconnect();}catch{}
+        });
+        peer.on('error',err=>{
+          if(peer!==peerClient)return;
+          if(err && err.type==='unavailable-id' && attempts<4){
+            attempts++;try{peer.destroy();}catch{};saveAndShowNewPeerId();setTimeout(makePeer,250);return;
+          }
+          const msg=err && (err.type==='peer-unavailable'?'That friend code is not online. Ask them to open Online P2P and try again.':err.message||err.type)||'Unknown connection error';
+          setPeerStatus('Online error: '+msg,true);
+          if(!settled){settled=true;reject(err instanceof Error?err:new Error(msg));}
+        });
+      };
+      makePeer();
+    }).finally(()=>{peerInitPromise=null;});
+    return peerInitPromise;
+  }
+  function handleIncomingConnection(conn){
+    if(mode!=='online'||running||peerConnected||pendingChallengeConn||peerChannel){
+      conn.on('open',()=>{sendOn(conn,{t:'busy'});setTimeout(()=>{try{conn.close();}catch{}},300);});
+      return;
+    }
+    pendingChallengeConn=conn;
+    conn.on('data',data=>{
+      const msg=parsePeerMessage(data);if(!msg)return;
+      if(pendingChallengeConn===conn && msg.t==='challenge'){
+        pendingChallengeFighter=characterOrder.includes(msg.fighter)?msg.fighter:'aqua';
+        $('incomingChallengeText').textContent=(conn.peer||'A friend')+' wants to fight as '+CHARACTERS[pendingChallengeFighter].name+'. Accept to start the match.';
+        $('incomingChallenge').classList.remove('hidden');$('acceptChallengeBtn').disabled=false;
+        setPeerStatus('Incoming challenge request! Click Accept & Start Match.');
+        return;
       }
-    };
-    channel.onclose=()=>{peerConnected=false;$('onlineStartBtn').disabled=true;setPeerStatus('The peer connection closed. Create or accept a new challenge to reconnect.',true);};
-    channel.onerror=()=>setPeerStatus('The peer data channel reported an error. Try reconnecting.',true);
-    channel.onmessage=ev=>{
-      let msg;try{msg=JSON.parse(ev.data);}catch{return;}
-      if(msg.t==='input'&&onlineRole==='host'){
-        remoteHeld={left:!!msg.held.left,right:!!msg.held.right,block:!!msg.held.block,light:!!msg.held.light};
-        (msg.edges||[]).forEach(a=>remoteEdges.add(a));
-      }else if(msg.t==='state'&&onlineRole==='guest')applyNetworkState(msg);
-      else if(msg.t==='start'&&onlineRole==='guest'){
-        mode='online';renderCards();beginMatch(true,{p1:msg.p1,p2:msg.p2});
-      }else if(msg.t==='rematchRequest'&&onlineRole==='host'&&ended){beginMatch();}
-      else if(msg.t==='ping')peerSend({t:'pong',at:msg.at});
-    };
+      if(peerChannel===conn)handlePeerMessage(msg);
+    });
+    conn.on('open',()=>setPeerStatus('A friend connected and is sending a challenge request…'));
+    conn.on('close',()=>{
+      if(pendingChallengeConn===conn){pendingChallengeConn=null;pendingChallengeFighter='';$('incomingChallenge').classList.add('hidden');$('acceptChallengeBtn').disabled=true;setPeerStatus('Friend disconnected before you accepted. Still listening for requests.');}
+      if(peerChannel===conn)handleActivePeerClosed(conn);
+    });
+    conn.on('error',err=>{if(pendingChallengeConn===conn)setPeerStatus('Challenge connection error: '+(err.message||'please try again'),true);});
   }
-  function peerSend(message){if(peerChannel&&peerChannel.readyState==='open'){try{peerChannel.send(JSON.stringify(message));return true;}catch(e){setPeerStatus('Send failed: '+e.message,true);}}return false;}
-  async function copyField(id){const el=$(id);if(!el.value){setPeerStatus('There is no code to copy yet.',true);return;}try{await navigator.clipboard.writeText(el.value);setPeerStatus('Code copied. Send it to your friend in your usual messaging app.');}catch{el.focus();el.select();setPeerStatus('Your browser blocked clipboard access. The code is selected; press Ctrl+C to copy it.');}}
-  $('createInviteBtn').addEventListener('click',async()=>{
-    resetPeerConnection(false);onlineRole='host';mode='online';renderCards();setPeerStatus('Creating challenge and collecting network candidates…');$('onlineStartBtn').disabled=true;
+  function handleActivePeerClosed(conn){
+    if(peerChannel!==conn)return;
+    peerConnected=false;peerChannel=null;remotePeerId='';remoteHeld={left:false,right:false,block:false,light:false};remoteEdges.clear();
+    setPeerStatus('Friend disconnected. Your code is still active; ask them to request another fight.',true);
+  }
+  function handlePeerMessage(msg){
+    if(!msg || typeof msg!=='object')return;
+    if(msg.t==='accepted' && onlineRole==='guest'){
+      peerConnected=true;setPeerStatus('Challenge accepted! Starting the fight…');
+    }else if(msg.t==='busy' && onlineRole==='guest'){
+      setPeerStatus('Your friend is busy or already in a match. Try again later.',true);
+      try{if(peerChannel)peerChannel.close();}catch{}peerChannel=null;peerConnected=false;
+    }else if(msg.t==='declined' && onlineRole==='guest'){
+      setPeerStatus('Your friend declined the challenge.');try{if(peerChannel)peerChannel.close();}catch{}peerChannel=null;peerConnected=false;
+    }else if(msg.t==='input'&&onlineRole==='host'){
+      remoteHeld={left:!!(msg.held&&msg.held.left),right:!!(msg.held&&msg.held.right),block:!!(msg.held&&msg.held.block),light:!!(msg.held&&msg.held.light)};
+      (msg.edges||[]).forEach(a=>remoteEdges.add(a));
+    }else if(msg.t==='state'&&onlineRole==='guest')applyNetworkState(msg);
+    else if(msg.t==='start'&&onlineRole==='guest'){
+      mode='online';renderCards();beginMatch(true,{p1:msg.p1,p2:msg.p2});
+    }else if(msg.t==='rematchRequest'&&onlineRole==='host'&&ended){beginMatch();}
+    else if(msg.t==='ping')peerSend({t:'pong',at:msg.at});
+  }
+  function peerSend(message){return sendOn(peerChannel,message);}
+  async function copyMyCode(){
+    const code=localPeerId;
+    try{await navigator.clipboard.writeText(code);setPeerStatus('Your code '+code+' was copied. Send it to your friend.');}
+    catch{const temp=document.createElement('textarea');temp.value=code;temp.style.position='fixed';temp.style.opacity='0';document.body.appendChild(temp);temp.select();let ok=false;try{ok=document.execCommand('copy');}catch{}temp.remove();setPeerStatus(ok?'Your code '+code+' was copied.':'Your code is '+code+'. Select and copy it manually.');}
+  }
+  $('copyMyIdBtn').addEventListener('click',copyMyCode);
+  $('requestChallengeBtn').addEventListener('click',async()=>{
+    const code=normalizeFriendCode($('friendCodeInput').value);
+    if(!/^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{6}$/.test(code)){setPeerStatus('Enter your friend’s 6-character code (letters A–Z except I/O, and numbers 2–9).',true);return;}
+    if(code===localPeerId){setPeerStatus('That is your own code. Enter your friend’s code instead.',true);return;}
     try{
-      peerConnection=makePeerConnection();peerChannel=peerConnection.createDataChannel('elemental-brawl',{ordered:true});attachPeerChannel(peerChannel);
-      const offer=await peerConnection.createOffer();await peerConnection.setLocalDescription(offer);await waitForIce(peerConnection);
-      $('inviteCodeOutput').value=await encodeSignal({kind:'offer',sdp:peerConnection.localDescription.sdp,peerId:localPeerId,fighter:chosen.p1,version:1});
-      setPeerStatus('Challenge created. Send the invite code above to your friend. They must return their reply code before you can connect.');
-    }catch(e){setPeerStatus('Could not create challenge: '+e.message,true);resetPeerConnection(false);}
+      await ensurePeerReady();
+      if(peerChannel){try{peerChannel.close();}catch{}peerChannel=null;peerConnected=false;}
+      if(pendingChallengeConn){try{pendingChallengeConn.close();}catch{}pendingChallengeConn=null;}
+      pendingChallengeFighter='';$('incomingChallenge').classList.add('hidden');$('acceptChallengeBtn').disabled=true;
+      onlineRole='guest';remotePeerId=code;peerConnected=false;
+      setPeerStatus('Sending a fight request to '+code+'…');
+      const conn=peerClient.connect(code,{reliable:true,metadata:{fighter:chosen.p1}});peerChannel=conn;
+      conn.on('open',()=>{
+        if(peerChannel!==conn)return;
+        sendOn(conn,{t:'challenge',fighter:chosen.p1});
+        setPeerStatus('Request sent! Waiting for your friend to click Accept. Keep this window open.');
+      });
+      conn.on('data',data=>{const msg=parsePeerMessage(data);if(msg)handlePeerMessage(msg);});
+      conn.on('close',()=>{if(peerChannel===conn)handleActivePeerClosed(conn);});
+      conn.on('error',err=>setPeerStatus('Could not reach that friend code. Make sure they are online: '+(err.message||'connection failed'),true));
+    }catch(e){setPeerStatus(e.message||'Could not send the challenge.',true);}
   });
-  $('acceptInviteBtn').addEventListener('click',async()=>{
-    setPeerStatus('Reading invite and preparing your reply…');
-    try{
-      const invite=await decodeSignal($('inviteCodeInput').value);if(invite.kind!=='offer'||!invite.sdp)throw new Error('This is not a valid challenge invite code.');
-      resetPeerConnection(false);onlineRole='guest';remotePeerId=invite.peerId||'host';peerChar=chosen.p1;renderCards();
-      peerConnection=makePeerConnection();peerConnection.ondatachannel=ev=>attachPeerChannel(ev.channel);
-      await peerConnection.setRemoteDescription({type:'offer',sdp:invite.sdp});const answer=await peerConnection.createAnswer();await peerConnection.setLocalDescription(answer);await waitForIce(peerConnection);
-      $('replyCodeOutput').value=await encodeSignal({kind:'answer',sdp:peerConnection.localDescription.sdp,peerId:localPeerId,to:invite.peerId||'',fighter:chosen.p1,version:1});
-      setPeerStatus('Challenge accepted. Send your reply code above back to the host. Keep this tab open while they connect.');
-    }catch(e){setPeerStatus('Could not accept challenge: '+e.message,true);}
+  $('acceptChallengeBtn').addEventListener('click',()=>{
+    const conn=pendingChallengeConn;
+    if(!conn){setPeerStatus('No incoming request to accept.',true);return;}
+    if(!conn.open){setPeerStatus('The challenger disconnected. Wait for them to request again.',true);return;}
+    onlineRole='host';peerChannel=conn;peerConnected=true;remotePeerId=conn.peer||'friend';
+    chosen.p2=characterOrder.includes(pendingChallengeFighter)?pendingChallengeFighter:'aqua';
+    pendingChallengeConn=null;pendingChallengeFighter='';$('incomingChallenge').classList.add('hidden');$('acceptChallengeBtn').disabled=true;
+    mode='online';renderCards();
+    peerSend({t:'accepted',hostFighter:chosen.p1});
+    setPeerStatus('Challenge accepted. Match starting now!');
+    beginMatch();
   });
-  $('connectReplyBtn').addEventListener('click',async()=>{
-    if(onlineRole!=='host'||!peerConnection){setPeerStatus('First click Create challenge on the host laptop.',true);return;}
-    try{
-      const reply=await decodeSignal($('replyCodeInput').value);if(reply.kind!=='answer'||!reply.sdp)throw new Error('This is not a valid reply code. Ask your friend to copy the complete reply code.');
-      if(reply.to&&reply.to!==localPeerId)throw new Error('That reply was made for a different host ID. Recreate the invite and try again.');
-      remotePeerId=reply.peerId||'friend';peerChar=reply.fighter||'aqua';chosen.p2=peerChar;renderCards();
-      await peerConnection.setRemoteDescription({type:'answer',sdp:reply.sdp});setPeerStatus('Reply accepted. Waiting for the direct data channel to open…');
-    }catch(e){setPeerStatus('Could not connect: '+e.message,true);}
+  $('declineChallengeBtn').addEventListener('click',()=>{
+    const conn=pendingChallengeConn;if(conn)sendOn(conn,{t:'declined'});
+    pendingChallengeConn=null;pendingChallengeFighter='';$('incomingChallenge').classList.add('hidden');$('acceptChallengeBtn').disabled=true;
+    try{if(conn)conn.close();}catch{}setPeerStatus('Challenge declined. Still listening for other requests.');
   });
-  $('copyInviteBtn').addEventListener('click',()=>copyField('inviteCodeOutput'));
-  $('copyReplyBtn').addEventListener('click',()=>copyField('replyCodeOutput'));
-  $('resetPeerBtn').addEventListener('click',()=>{resetPeerConnection(true);setPeerStatus("Connection reset. Create a new challenge or accept a friend\'s invite.");});
-  $('onlineStartBtn').addEventListener('click',()=>{if(!peerConnected||onlineRole!=='host'){setPeerStatus('Connect to your friend first.');return;}mode='online';beginMatch();});
+  $('cancelOnlineBtn').addEventListener('click',()=>{
+    if(pendingChallengeConn){try{pendingChallengeConn.close();}catch{}pendingChallengeConn=null;}
+    if(peerChannel){try{peerChannel.close();}catch{}peerChannel=null;}
+    peerConnected=false;pendingChallengeFighter='';remotePeerId='';onlineRole='';remoteHeld={left:false,right:false,block:false,light:false};remoteEdges.clear();
+    $('incomingChallenge').classList.add('hidden');$('acceptChallengeBtn').disabled=true;
+    setPeerStatus(peerReady?'Disconnected. Your code is still online and ready for another request.':'Connect to Online P2P to go online.');
+  });
 
   $('controlsToggle').addEventListener('click',()=>{
     const panel=$('controlsPanel');panel.classList.toggle('open');$('controlsToggle').setAttribute('aria-expanded',panel.classList.contains('open'));
@@ -397,7 +465,7 @@
   function beginMatch(fromPeer=false,networkChars=null){
     if(mode==='online'&&!fromPeer){
       if(onlineRole==='guest'){setPeerStatus('Connected as guest. The host must start the online fight.');return;}
-      if(onlineRole!=='host'||!peerConnected){setPeerStatus('Create a challenge and connect your friend before starting the online fight.',true);return;}
+      if(onlineRole!=='host'||!peerConnected){setPeerStatus('Wait for a friend request, then accept it to start the online fight.',true);return;}
     }
     if(!assetsReady()){
       const miss=assetsMissing();assetStatus.classList.add('error');assetStatus.textContent='Missing image file(s): '+miss.join(', ')+'. Put arena.png and character1.png / character2.png / character3.png beside this HTML file.';return;
@@ -737,6 +805,7 @@
   allAssets.forEach(img=>{img.addEventListener('load',statusUpdate);img.addEventListener('error',statusUpdate);});
   // Initial status handles the case where the browser finishes loading before listeners are installed.
   setTimeout(statusUpdate,100);
+  window.addEventListener('beforeunload',()=>{try{if(peerClient&&!peerClient.destroyed)peerClient.destroy();}catch{}});
   renderCards();
   render(0);
 })();
